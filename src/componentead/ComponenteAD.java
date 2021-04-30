@@ -15,14 +15,17 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 /**
- *
- * @author Usuario
+ * En esta clase se declaran todas las propiedades, constructores, 
+ * métodos CRUD de usuarios, roles, permisos, productos, colaboradores, categorias del pojo ComponenteAD
+ * @author Walter
+ * @version 1.0
+ * @since 25/04/2021
  */
 public class ComponenteAD {
     Connection conexion;
     /**
-    * Método constructor de vacío de la clase
-     * @throws componentead.ExcepcionAD se lanzara cuando se produzca algun problema al cargar el jdbc
+    * Método constructor que permite cargar el jdbc de la clase ComponenteAD
+     * @throws componentead.ExcepcionAD se lanzará cuando se produzca algún problema al cargar el jdbc
     */
     public ComponenteAD() throws ExcepcionAD {
         try {
@@ -37,7 +40,7 @@ public class ComponenteAD {
     
     /**
     * Método que permite conectar con la BD Ong
-     * @throws componentead.ExcepcionAD Se lanzara cuando se produzca algun problema al conectar con la BD Ong
+     * @throws componentead.ExcepcionAD Se lanzará cuando se produzca algún problema al conectar con la BD Ong
     */
     private void conectarBD() throws ExcepcionAD {
         try {

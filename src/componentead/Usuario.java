@@ -40,6 +40,17 @@ public class Usuario {
     }
     
     /**
+    * Método constructor sobrecargado de la clase Usuario
+    * @param nombre de la clase String
+    * @param contrasena de la clase String
+    */
+    public Usuario(String nombre, String contrasena) {
+        this.nombre = nombre;
+        this.contrasena = contrasena;
+    }
+    
+    
+    /**
     * Método Getter de usuarioId
      * @return usuarioId
     */

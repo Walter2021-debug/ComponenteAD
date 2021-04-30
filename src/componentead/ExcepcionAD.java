@@ -19,13 +19,13 @@ public class ExcepcionAD extends Exception {
     private String sentenciaSQL;
     
     /**
-    * Método constructor de vacío de la clase
+    * Método constructor de vacío de la clase ExcepcionAD
     */
     public ExcepcionAD() {
     }
     
     /**
-    * Método constructor sobrecargado de la clase
+    * Método constructor sobrecargado de la clase ExcepcionAD
     * @param mensajeUsuario de la clase String
     * @param mensajeAdministrador de la clase String
     * @param codigoError de la clase Integer
