@@ -95,6 +95,10 @@ public class Permiso {
     */
     public String[] toArrayString() {
         String[] s = new String[3];
+        int cont = 5;
+        for (int i = 0; i < cont; i++) {
+            permisoId = i;
+        }
         s[0] = Integer.toString(permisoId);
         s[1] = String.valueOf(usuario);
         s[2] = String.valueOf(rol);

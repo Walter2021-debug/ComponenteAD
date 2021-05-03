@@ -95,6 +95,10 @@ public class Categoria {
     */
     public String[] toArrayString() {
         String[] s = new String[3];
+        int cont = 5;
+        for (int i = 0; i < cont; i++) {
+            categoriaId = i;
+        }
         s[0] = Integer.toString(categoriaId);
         s[1] = nombre;
         s[2] = descripcion;
