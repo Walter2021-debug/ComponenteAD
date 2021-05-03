@@ -127,6 +127,15 @@ public class Colaborador {
     public String toString() {
         return "Colaborador{" + "colaboradorId=" + colaboradorId + ", nombre=" + nombre + ", email=" + email + ", telefono=" + telefono + ", foto=" + foto + '}';
     }
-
+    
+    public String[] toArrayString() {
+        String[] s = new String[5];
+        s[0] = Integer.toString(colaboradorId);
+        s[1] = nombre;
+        s[2] = email;
+        s[3] = telefono;
+        s[4] = foto;
+        return s;
+    }
     
 }

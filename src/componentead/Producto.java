@@ -187,5 +187,17 @@ public class Producto {
                 + ", colaborador=" + colaborador + ", categoria=" + categoria + '}';
     }
 
-    
+    public String[] toArrayString() {
+        String[] s = new String[8];
+        s[0] = Integer.toString(productoId);
+        s[1] = nombre;
+        s[2] = envase;
+        s[3] = fechaCaducidad;
+        s[4] = imagen;
+        s[5] = qr;
+        s[6] = String.valueOf(colaborador);
+        s[7] = String.valueOf(categoria);
+        
+        return s;
+    }
 }

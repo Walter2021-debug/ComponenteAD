@@ -90,5 +90,13 @@ public class Rol {
         return "Rol{" + "rolId=" + rolId + ", nombre=" + nombre + ", descripcion=" + descripcion + '}';
     }
     
+    public String[] toArrayString() {
+        String[] s = new String[3];
+        s[0] = Integer.toString(rolId);
+        s[1] = nombre;
+        s[2] = descripcion;
+        
+        return s;
+    }
     
 }

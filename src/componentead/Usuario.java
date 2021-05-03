@@ -139,5 +139,15 @@ public class Usuario {
         return "Usuario{" + "usuarioId=" + usuarioId + ", nombre=" + nombre + ", email=" + email + ", contrasena=" + contrasena + ", imagen=" + imagen + '}';
     }
     
+    public String[] toArrayString() {
+        String[] s = new String[5];
+        s[0] = Integer.toString(usuarioId);
+        s[1] = nombre;
+        s[2] = email;
+        s[3] = contrasena;
+        s[4] = imagen;
+        return s;
+    }
+    
     
 }

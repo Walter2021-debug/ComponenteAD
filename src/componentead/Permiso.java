@@ -90,5 +90,11 @@ public class Permiso {
         return "Permiso{" + "permisoId=" + permisoId + ", usuario=" + usuario + ", rol=" + rol + '}';
     }
     
-    
+    public String[] toArrayString() {
+        String[] s = new String[3];
+        s[0] = Integer.toString(permisoId);
+        s[1] = String.valueOf(usuario);
+        s[2] = String.valueOf(rol);
+        return s;
+    }
 }
