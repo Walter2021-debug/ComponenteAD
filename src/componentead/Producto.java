@@ -186,7 +186,10 @@ public class Producto {
                 + ", fechaCaducidad=" + fechaCaducidad + ", imagen=" + imagen + ", qr=" + qr 
                 + ", colaborador=" + colaborador + ", categoria=" + categoria + '}';
     }
-
+    
+    /* Método de la clase String[]
+     * @return s
+    */
     public String[] toArrayString() {
         String[] s = new String[8];
         s[0] = Integer.toString(productoId);

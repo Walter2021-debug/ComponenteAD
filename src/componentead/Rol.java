@@ -90,6 +90,9 @@ public class Rol {
         return "Rol{" + "rolId=" + rolId + ", nombre=" + nombre + ", descripcion=" + descripcion + '}';
     }
     
+    /* Método de la clase String[]
+     * @return s
+    */
     public String[] toArrayString() {
         String[] s = new String[3];
         s[0] = Integer.toString(rolId);

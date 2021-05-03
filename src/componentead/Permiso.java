@@ -90,6 +90,9 @@ public class Permiso {
         return "Permiso{" + "permisoId=" + permisoId + ", usuario=" + usuario + ", rol=" + rol + '}';
     }
     
+    /* Método de la clase String[]
+     * @return s
+    */
     public String[] toArrayString() {
         String[] s = new String[3];
         s[0] = Integer.toString(permisoId);

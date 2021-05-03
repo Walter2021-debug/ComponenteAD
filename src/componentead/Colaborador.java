@@ -128,6 +128,9 @@ public class Colaborador {
         return "Colaborador{" + "colaboradorId=" + colaboradorId + ", nombre=" + nombre + ", email=" + email + ", telefono=" + telefono + ", foto=" + foto + '}';
     }
     
+    /* Método de la clase String[]
+     * @return s
+    */
     public String[] toArrayString() {
         String[] s = new String[5];
         s[0] = Integer.toString(colaboradorId);

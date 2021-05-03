@@ -139,6 +139,9 @@ public class Usuario {
         return "Usuario{" + "usuarioId=" + usuarioId + ", nombre=" + nombre + ", email=" + email + ", contrasena=" + contrasena + ", imagen=" + imagen + '}';
     }
     
+    /* Método de la clase String[]
+     * @return s
+    */
     public String[] toArrayString() {
         String[] s = new String[5];
         s[0] = Integer.toString(usuarioId);
