@@ -204,7 +204,7 @@ public class Producto {
         String[] s = new String[8];
         int cont = 5;
         for (int i = 0; i < cont; i++) {
-            productoId = i;
+            productoId += i;
         }
         s[0] = Integer.toString(productoId);
         s[1] = nombre;

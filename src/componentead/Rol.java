@@ -107,7 +107,7 @@ public class Rol {
         String[] s = new String[3];
         int cont = 5;
         for (int i = 0; i < cont; i++) {
-            rolId = i;
+            rolId += i;
         }
         s[0] = Integer.toString(rolId);
         s[1] = nombre;

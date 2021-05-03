@@ -145,7 +145,7 @@ public class Colaborador {
         String[] s = new String[5];
         int cont = 5;
         for (int i = 0; i < cont; i++) {
-            colaboradorId = i;
+            colaboradorId += i;
         }
         s[0] = Integer.toString(colaboradorId);
         s[1] = nombre;

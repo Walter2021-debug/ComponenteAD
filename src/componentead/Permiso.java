@@ -107,7 +107,7 @@ public class Permiso {
         String[] s = new String[3];
         int cont = 5;
         for (int i = 0; i < cont; i++) {
-            permisoId = i;
+            permisoId += i;
         }
         s[0] = Integer.toString(permisoId);
         s[1] = String.valueOf(usuario);

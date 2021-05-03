@@ -157,7 +157,7 @@ public class Usuario {
         String[] s = new String[5];
         int cont = 5;
         for (int i = 0; i < cont; i++) {
-            usuarioId = i;
+            usuarioId += i;
         }
         s[0] = Integer.toString(usuarioId);
         s[1] = nombre;
