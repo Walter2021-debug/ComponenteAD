@@ -139,8 +139,10 @@ public class Colaborador {
         String color1 = "#81d4fa";
         String color2 = "#ff5f5f";
         botonEditar.setText("Editar");
+        botonEditar.setVisible(true);
         botonEditar.setBackground(java.awt.Color.decode(color1));
         botonEliminar.setText("Eliminar");
+        botonEliminar.setVisible(true);
         botonEliminar.setBackground(java.awt.Color.decode(color2));
         String[] s = new String[5];
         int cont = 5;
