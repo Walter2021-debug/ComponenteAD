@@ -5,6 +5,8 @@
  */
 package componentead;
 
+import javax.swing.JButton;
+
 /**
  * En esta clase se declaran todas las propiedades, constructores, 
  * métodos Getters y Setters y toString del pojo Categoria
@@ -94,6 +96,14 @@ public class Categoria {
      * @return s
     */
     public String[] toArrayString() {
+        JButton botonEditar = new JButton();
+        JButton botonEliminar = new JButton();
+        String color1 = "#81d4fa";
+        String color2 = "#ff5f5f";
+        botonEditar.setText("Editar");
+        botonEditar.setBackground(java.awt.Color.decode(color1));
+        botonEliminar.setText("Eliminar");
+        botonEliminar.setBackground(java.awt.Color.decode(color2));
         String[] s = new String[3];
         int cont = 5;
         for (int i = 0; i < cont; i++) {
@@ -102,6 +112,8 @@ public class Categoria {
         s[0] = Integer.toString(categoriaId);
         s[1] = nombre;
         s[2] = descripcion;
+        s[3] = botonEditar.getText();
+        s[4] = botonEliminar.getText();
         return s;
     }
     

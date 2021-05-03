@@ -5,6 +5,9 @@
  */
 package componentead;
 
+import javafx.scene.paint.Color;
+import javax.swing.JButton;
+
 /**
  * En esta clase se declaran todas las propiedades, constructores, 
  * métodos Getters y Setters y toString del pojo Usuario
@@ -143,6 +146,14 @@ public class Usuario {
      * @return s
     */
     public String[] toArrayString() {
+        JButton botonEditar = new JButton();
+        JButton botonEliminar = new JButton();
+        String color1 = "#81d4fa";
+        String color2 = "#ff5f5f";
+        botonEditar.setText("Editar");
+        botonEditar.setBackground(java.awt.Color.decode(color1));
+        botonEliminar.setText("Eliminar");
+        botonEliminar.setBackground(java.awt.Color.decode(color2));
         String[] s = new String[5];
         int cont = 5;
         for (int i = 0; i < cont; i++) {
@@ -153,6 +164,8 @@ public class Usuario {
         s[2] = email;
         s[3] = contrasena;
         s[4] = imagen;
+        s[5] = botonEditar.getText();
+        s[6] = botonEliminar.getText();
         return s;
     }
     
