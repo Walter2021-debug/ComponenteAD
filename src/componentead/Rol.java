@@ -5,7 +5,10 @@
  */
 package componentead;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JButton;
+import javax.swing.table.DefaultTableModel;
 
 /**
  * En esta clase se declaran todas las propiedades, constructores, 
@@ -95,28 +98,11 @@ public class Rol {
     /* Método de la clase String[]
      * @return s
     */
-    public String[] toArrayString() {
-        JButton botonEditar = new JButton();
-        JButton botonEliminar = new JButton();
-        String color1 = "#81d4fa";
-        String color2 = "#ff5f5f";
-        botonEditar.setText("Editar");
-        botonEditar.setVisible(true);
-        botonEditar.setBackground(java.awt.Color.decode(color1));
-        botonEliminar.setText("Eliminar");
-        botonEliminar.setVisible(true);
-        botonEliminar.setBackground(java.awt.Color.decode(color2));
-        String[] s = new String[3];
-        int cont = 5;
-        for (int i = 0; i < cont; i++) {
-            rolId += i;
-        }
-        s[0] = Integer.toString(rolId);
-        s[1] = nombre;
-        s[2] = descripcion;
-        s[3] = botonEditar.getText();
-        s[4] = botonEliminar.getText();
+    public Object[] toArrayString() {
+        Object[] s = new Object[3];
+        s[0] = Integer.toString(rolId++);
+        s[1] = String.valueOf(nombre);
+        s[2] = String.valueOf(descripcion);
         return s;
-    }
-    
+    } 
 }
