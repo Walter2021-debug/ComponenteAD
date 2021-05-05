@@ -5,10 +5,6 @@
  */
 package componentead;
 
-import java.util.ArrayList;
-import java.util.List;
-import javax.swing.JButton;
-import javax.swing.table.DefaultTableModel;
 
 /**
  * En esta clase se declaran todas las propiedades, constructores, 
@@ -92,17 +88,17 @@ public class Rol {
     */
     @Override
     public String toString() {
-        return "Rol{" + "rolId=" + rolId + ", nombre=" + nombre + ", descripcion=" + descripcion + '}';
+        return "Rol{" + "rolId=" + rolId++ + ", nombre=" + nombre + ", descripcion=" + descripcion + '}';
     }
     
     /* Método de la clase String[]
      * @return s
     */
-    public Object[] toArrayString() {
-        Object[] s = new Object[3];
+    public String[] toArrayString() {
+        String[] s = new String[3];
         s[0] = Integer.toString(rolId++);
-        s[1] = String.valueOf(nombre);
-        s[2] = String.valueOf(descripcion);
+        s[1] = this.nombre;
+        s[2] = this.descripcion;
         return s;
     } 
 }
