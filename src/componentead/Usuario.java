@@ -5,8 +5,6 @@
  */
 package componentead;
 
-import javafx.scene.paint.Color;
-import javax.swing.JButton;
 
 /**
  * En esta clase se declaran todas las propiedades, constructores, 
@@ -22,6 +20,8 @@ public class Usuario {
     private String contrasena;
     private String imagen;
     
+    private int cont = 0;
+    
     /**
     * Método constructor de vacío de la clase Usuario
     */
@@ -36,6 +36,8 @@ public class Usuario {
     * @param imagen de la clase String
     */
     public Usuario(String nombre, String email, String contrasena, String imagen) {
+        cont += 1;
+        this.usuarioId = cont;
         this.nombre = nombre;
         this.email = email;
         this.contrasena = contrasena;
@@ -147,7 +149,7 @@ public class Usuario {
     */
     public String[] toArrayString() {
         String[] s = new String[5];
-        s[0] = Integer.toString(usuarioId++);
+        s[0] = Integer.toString(usuarioId);
         s[1] = nombre;
         s[2] = email;
         s[3] = contrasena;
