@@ -193,21 +193,7 @@ public class Producto {
      * @return s
     */
     public String[] toArrayString() {
-        JButton botonEditar = new JButton();
-        JButton botonEliminar = new JButton();
-        String color1 = "#81d4fa";
-        String color2 = "#ff5f5f";
-        botonEditar.setText("Editar");
-        botonEditar.setVisible(true);
-        botonEditar.setBackground(java.awt.Color.decode(color1));
-        botonEliminar.setText("Eliminar");
-        botonEliminar.setVisible(true);
-        botonEliminar.setBackground(java.awt.Color.decode(color2));
         String[] s = new String[8];
-        int cont = 5;
-        for (int i = 0; i < cont; i++) {
-            productoId += i;
-        }
         s[0] = Integer.toString(productoId);
         s[1] = nombre;
         s[2] = envase;
@@ -216,8 +202,6 @@ public class Producto {
         s[5] = qr;
         s[6] = String.valueOf(colaborador);
         s[7] = String.valueOf(categoria);
-        s[8] = botonEditar.getText();
-        s[9] = botonEliminar.getText();
         return s;
     }
 }

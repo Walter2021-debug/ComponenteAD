@@ -88,7 +88,7 @@ public class Rol {
     */
     @Override
     public String toString() {
-        return "Rol{" + "rolId=" + rolId++ + ", nombre=" + nombre + ", descripcion=" + descripcion + '}';
+        return "Rol{" + "rolId=" + rolId + ", nombre=" + nombre + ", descripcion=" + descripcion + '}';
     }
     
     /* Método de la clase String[]

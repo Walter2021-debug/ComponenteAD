@@ -134,28 +134,12 @@ public class Colaborador {
      * @return s
     */
     public String[] toArrayString() {
-        JButton botonEditar = new JButton();
-        JButton botonEliminar = new JButton();
-        String color1 = "#81d4fa";
-        String color2 = "#ff5f5f";
-        botonEditar.setText("Editar");
-        botonEditar.setVisible(true);
-        botonEditar.setBackground(java.awt.Color.decode(color1));
-        botonEliminar.setText("Eliminar");
-        botonEliminar.setVisible(true);
-        botonEliminar.setBackground(java.awt.Color.decode(color2));
         String[] s = new String[5];
-        int cont = 5;
-        for (int i = 0; i < cont; i++) {
-            colaboradorId += i;
-        }
         s[0] = Integer.toString(colaboradorId);
         s[1] = nombre;
         s[2] = email;
         s[3] = telefono;
         s[4] = foto;
-        s[5] = botonEditar.getText();
-        s[6] = botonEliminar.getText();
         return s;
     }
     

@@ -121,16 +121,14 @@ public class ComponenteAD {
                     ead.setMensajeUsuario("Error: El nombre del usuario y email solamente debe contener "
                             + "caracteres alfanumericos. "
                             + "El email debe contener una @rroba, un punto, barra baja o cualquier carácter o simbolo especial. "
-                            + "La contraseña no debe sobrepasar la longitud máxima de 50 caracteres numericos decimales. ");
+                            + "La contraseña no debe sobrepasar la longitud máxima de 50 caracteres numericos. ");
                     break;
                 case 2899:
                     ead.setMensajeUsuario("Error: El nombre, email, y la contraseña no deben "
                             + "superar la longitud máxima de 50 caracteres. ");
                     break;
-                /*case 20500: ead.setMensajeUsuario("Error: La letra del dni y el telefono tiene caracteres incorrectos");
-                            break;*/
                 case 20001:
-                    ead.setMensajeUsuario("Error: No puede haber un email con mas de una @rroba. ");
+                    ead.setMensajeUsuario("Error: El email no puede contener mas de una arroba. ");
                     break;
                 default:
                     ead.setMensajeUsuario("Error en el sistema. Consulta con el administrador. ");
@@ -224,22 +222,22 @@ public class ComponenteAD {
                             + "menos la imagen deben ser obligatoria. ");
                     break;
                 case 2290:
-                    ead.setMensajeUsuario("Error: No se pudo modificar porque el nombre debe tener una longitud maxima"
+                    ead.setMensajeUsuario("Error: El nombre debe tener una longitud máxima"
                             + " 50 caracteres de la A-Z, \n "
-                            + "el email debe contener una @rroba, un punto, barrabaja o cualquier carácter especial "
+                            + "el email debe contener una arroba, un punto, barrabaja o cualquier carácter especial "
                             + "y también un carácter numerico decimal \n"
                             + "la contrasena debe tener una longitud máxima de 50 caracteres alfanumericos, mayúsculas, "
                             + "minúsculas, caracteres especiales y caracteres numericos. ");
                     break;
                 case 2899:
-                    ead.setMensajeUsuario("Error: No se pudo modificar porque la longitud máxima del nombre, email "
+                    ead.setMensajeUsuario("Error: La longitud máxima del nombre, email "
                             + "y la contraseña superan los 50 caracteres. ");
                     break;
                 case 20500:
-                    ead.setMensajeUsuario("Error: No se pudo modificar porque el nombre, email y la contraseña tienen o empiezan con caracteres incorrectos. ");
+                    ead.setMensajeUsuario("Error: El nombre, email y la contraseña tienen o empiezan con caracteres incorrectos. ");
                     break;
                 case 20001:
-                    ead.setMensajeUsuario("Error: No puede haber un email con mas de una @rroba. ");
+                    ead.setMensajeUsuario("Error: El email no puede tener mas de una arroba. ");
                     break;
                 default:
                     ead.setMensajeUsuario("Error en el sistema. Consulta con el administrador. ");
@@ -369,12 +367,8 @@ public class ComponenteAD {
                             + "porque no se pueden repetir. ");
                     break;
                 case 1400:
-                    ead.setMensajeUsuario("Error: No se pudo insertar porque toda la información debe ser obligatoria. ");
+                    ead.setMensajeUsuario("Error: Toda la información del rol debe ser obligatoria. ");
                     break;
-                /*case 2290:  ead.setMensajeUsuario("Error: No se pudo insertar la venta porque la sección del zapato no existe");
-                            break;         
-                case 2291:  ead.setMensajeUsuario("Error: La venta no se pudo insertar porque el identificador del cliente no existe");
-                            break;*/
                 default:
                     ead.setMensajeUsuario("Error en el sistema. Consulta con el administrador. ");
                     break;
@@ -457,16 +451,14 @@ public class ComponenteAD {
 
             switch (ex.getErrorCode()) {
                 case 1:
-                    ead.setMensajeUsuario("Error: No se pudo modificar el identificador del rol, el nombre "
+                    ead.setMensajeUsuario("Error: El identificador del rol, el nombre "
                             + "y la descripción del rol porque la información no se pueden repetir. ");
                     break;
                 case 1400:
                     ead.setMensajeUsuario("Error: Toda la información del rol debe ser obligatoria. ");
+                    break;           
+                case 2291:  ead.setMensajeUsuario("Error: El rol no se pudo modificar porque tiene permiso asociado. ");
                     break;
-                /*case 2290:  ead.setMensajeUsuario("Error: No se pudo modificar la venta porque la sección del zapato no existe");
-                            break;            
-                case 2291:  ead.setMensajeUsuario("Error: La venta no se pudo modificar porque el identificador del cliente no existe");
-                            break; */
                 default:
                     ead.setMensajeUsuario("Error en el sistema. Consulta con el administrador. ");
                     break;
@@ -587,7 +579,7 @@ public class ComponenteAD {
             switch (ex.getErrorCode()) {
                 case 1:
                     ead.setMensajeUsuario("Error: El identificador del permiso, el nombre del usuario y "
-                            + "el nombre del rol no se pueden repetir.");
+                            + "el nombre del rol no se pueden repetir. ");
                     break;
                 case 1400:
                     ead.setMensajeUsuario("Error: Toda la información del permiso "
@@ -601,10 +593,6 @@ public class ComponenteAD {
                     ead.setMensajeUsuario("Error: El nombre del usuario y la contraseña no deben superar la longitud"
                             + " máxima de 50 caracteres alfanuméricos. ");
                     break;
-                /*case 20500: ead.setMensajeUsuario("Error: La letra del dni y el telefono tiene caracteres incorrectos");
-                            break;
-                case 20001: ead.setMensajeUsuario("Error: No puede haber un email con mas de una @rroba");
-                            break;*/
                 default:
                     ead.setMensajeUsuario("Error en el sistema. Consulta con el administrador. ");
                     break;
@@ -642,8 +630,6 @@ public class ComponenteAD {
             ead.setSentenciaSQL(delete);
 
             switch (ex.getErrorCode()) {
-                /*case 2292:  ead.setMensajeUsuario("Error: El usuario no se puede eliminar porque tiene una permiso asociada");
-                            break;*/
                 default:
                     ead.setMensajeUsuario("Error en el sistema. Consulta con el administrador");
                     break;
@@ -690,24 +676,22 @@ public class ComponenteAD {
                             + "no se modificó porque no se pueden repetir. ");
                     break;
                 case 1407:
-                    ead.setMensajeUsuario("Error: No se pudo modificar porque toda la información del permiso "
+                    ead.setMensajeUsuario("Error: Toda la información del permiso "
                             + "debe ser obligatoria. ");
                     break;
                 case 2290:
-                    ead.setMensajeUsuario("Error: No se pudo modificar porque el nombre del usuario y el nombre del rol solamente"
+                    ead.setMensajeUsuario("Error: El nombre del usuario y el nombre del rol solamente"
                             + "deben contener caracteres alfanumericos. ");
                     break;
                 case 2899:
-                    ead.setMensajeUsuario("Error: No se pudo modificar porque la longitud máxima del nombre del usuario "
+                    ead.setMensajeUsuario("Error: La longitud máxima del nombre del usuario "
                             + "y el nombre del rol no deben supera los 50 caracteres alfanumericos. ");
                     break;
                 case 20500:
-                    ead.setMensajeUsuario("Error: No se pudo modificar porque el nombre del usuario y el nombre del rol tienen o empiezan con caracteres incorrectos");
+                    ead.setMensajeUsuario("Error: El nombre del usuario y el nombre del rol tienen o empiezan con caracteres incorrectos. ");
                     break;
-                /*case 20001: ead.setMensajeUsuario("Error: No puede haber un email con mas de una @");
-                            break;*/
                 default:
-                    ead.setMensajeUsuario("Error en el sistema. Consulta con el administrador");
+                    ead.setMensajeUsuario("Error en el sistema. Consulta con el administrador. ");
                     break;
             }
             throw ead;
@@ -891,9 +875,6 @@ public class ComponenteAD {
                     break;
                 case 2290:
                     ead.setMensajeUsuario("Error: No se pudo insertar el producto porque el tipo de envase no existe. ");
-                    break;
-                case 2291:
-                    ead.setMensajeUsuario("Error: El producto no se pudo insertar porque tiene un colaborador asociado. ");
                     break;
                 default:
                     ead.setMensajeUsuario("Error en el sistema. Consulta con el administrador. ");
@@ -1152,12 +1133,12 @@ public class ComponenteAD {
                     ead.setMensajeUsuario("Error: El nombre de la persona o empresa colaboradora solamente"
                             + "debe contener caracteres alfanumericos, mayúsculas y minúsculas de la A-Z. "
                             + "El email debe contener una @rroba, un punto, barra baja o cualquier carácter o símbolo especial. "
-                            + "El teléfono solo debe contener caracteres numericos decimales. ");
+                            + "El teléfono solo debe contener caracteres numericos. ");
                     break;
                 case 2899:
                     ead.setMensajeUsuario("Error: El nombre, email del colaborador no deben "
                             + "superar la longitud máxima de 50 caracteres alfanumericos. El teléfono tampoco debe"
-                            + "superar la longitud máxima de 9 caracteres numericos decimales. ");
+                            + "superar la longitud máxima de 9 caracteres numericos. ");
                     break;
                 case 20500:
                     ead.setMensajeUsuario("Error: El nombre, el email, teléfono del colaborador tiene caracteres incorrectos. ");
@@ -1253,27 +1234,27 @@ public class ComponenteAD {
                             + "no se modificó porque la información no se pueden repetir. ");
                     break;
                 case 1407:
-                    ead.setMensajeUsuario("Error: No se pudo modificar porque toda la información del colaborador "
+                    ead.setMensajeUsuario("Error: Toda la información del colaborador "
                             + "deben ser obligatoria. ");
                     break;
                 case 2290:
-                    ead.setMensajeUsuario("Error: No se pudo modificar porque el nombre debe contener solamente"
+                    ead.setMensajeUsuario("Error: El nombre debe contener solamente"
                             + " caracteres alfanumericos, mayúsculas y minúsculas de A-Z y a-z. "
                             + "El email debe contener una @rroba, un punto, barrabaja o cualquier carácter o símbolo especial "
                             + "y también caracteres numericos decimales. "
-                            + "El teléfono debe tener solamente caracteres numericos decimales. ");
+                            + "El teléfono debe tener solamente caracteres numericos. ");
                     break;
                 case 2899:
-                    ead.setMensajeUsuario("Error: No se pudo modificar el nombre, email "
+                    ead.setMensajeUsuario("Error: El nombre, email "
                             + "del colaborador porque supera la longitud máxima permitida de 50 caracteres alfanumericos "
-                            + "o porque el teléfono supera la longitud máxima de 9 caracteres numericos decimales. ");
+                            + "o porque el teléfono supera la longitud máxima de 9 caracteres numericos. ");
                     break;
                 case 20500:
-                    ead.setMensajeUsuario("Error: No se pudo modificar porque el nombre, email y el telefono del colaborador "
+                    ead.setMensajeUsuario("Error: El nombre, email y el telefono del colaborador "
                             + "tienen o empiezan con caracteres incorrectos. ");
                     break;
                 case 20001:
-                    ead.setMensajeUsuario("Error: No se pudo modificar porque el email del colaborador contiene más de una @rroba. ");
+                    ead.setMensajeUsuario("Error: El email del colaborador contiene más de una @rroba. ");
                     break;
                 default:
                     ead.setMensajeUsuario("Error en el sistema. Consulta con el administrador");
@@ -1403,12 +1384,8 @@ public class ComponenteAD {
                             + "porque la información no se puede repetir. ");
                     break;
                 case 1400:
-                    ead.setMensajeUsuario("Error: No se pudo insertar porque toda la información de la categoría debe ser obligatoria. ");
+                    ead.setMensajeUsuario("Error: Toda la información de la categoría debe ser obligatoria. ");
                     break;
-                /*case 2290:  ead.setMensajeUsuario("Error: No se pudo insertar la categoria porque el tipo de envase no existe. ");
-                            break;
-                /*case 2291:  ead.setMensajeUsuario("Error: La categoria no se pudo insertar porque tiene un colaborador asociado. ");
-                            break;*/
                 default:
                     ead.setMensajeUsuario("Error en el sistema. Consulta con el administrador. ");
                     break;
@@ -1446,6 +1423,8 @@ public class ComponenteAD {
             ead.setSentenciaSQL(llamada);
 
             switch (ex.getErrorCode()) {
+                case 2291:  ead.setMensajeUsuario("Error: La categoria no se pudo eliminar porque tiene un producto asociado. ");
+                    break;
                 default:
                     ead.setMensajeUsuario("Error en el sistema. Consulta con el administrador. ");
                     break;
@@ -1492,11 +1471,9 @@ public class ComponenteAD {
                     break;
                 case 1400:
                     ead.setMensajeUsuario("Error: Toda la información de la categoria debe ser obligatoria. ");
+                    break;        
+                case 2291:  ead.setMensajeUsuario("Error: La categoria no se pudo modificar porque tiene un producto asociado. ");
                     break;
-                /*case 2290:  ead.setMensajeUsuario("Error: No se pudo modificar la categoria porque el tipo de envase no existe. ");
-                            break;          
-                case 2291:  ead.setMensajeUsuario("Error: El producto no se pudo modificar porque tiene un colaborador aasociado. ");
-                            break;*/
                 default:
                     ead.setMensajeUsuario("Error en el sistema. Consulta con el administrador. ");
                     break;

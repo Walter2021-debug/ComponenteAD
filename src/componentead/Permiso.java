@@ -96,26 +96,10 @@ public class Permiso {
      * @return s
     */
     public String[] toArrayString() {
-        JButton botonEditar = new JButton();
-        JButton botonEliminar = new JButton();
-        String color1 = "#81d4fa";
-        String color2 = "#ff5f5f";
-        botonEditar.setText("Editar");
-        botonEditar.setVisible(true);
-        botonEditar.setBackground(java.awt.Color.decode(color1));
-        botonEliminar.setText("Eliminar");
-        botonEliminar.setVisible(true);
-        botonEliminar.setBackground(java.awt.Color.decode(color2));
         String[] s = new String[3];
-        int cont = 5;
-        for (int i = 0; i < cont; i++) {
-            permisoId += i;
-        }
         s[0] = Integer.toString(permisoId);
         s[1] = String.valueOf(usuario);
         s[2] = String.valueOf(rol);
-        s[3] = botonEditar.getText();
-        s[4] = botonEliminar.getText();
         return s;
     }
 }
