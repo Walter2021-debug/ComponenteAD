@@ -156,6 +156,4 @@ public class Usuario {
         s[4] = imagen;
         return s;
     }
-    
-    
 }
