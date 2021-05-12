@@ -5,6 +5,10 @@
  */
 package componentead;
 
+import java.io.UnsupportedEncodingException;
+import java.security.InvalidKeyException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -13,12 +17,19 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Base64;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.spec.SecretKeySpec;
 
 /**
  * En esta clase se declaran todas las propiedades, constructores, métodos CRUD
  * de usuarios, roles, permisos, productos, colaboradores, categorias del pojo
  * ComponenteAD
- *
  * @author Walter
  * @version 1.0
  * @since 25/04/2021
@@ -29,7 +40,6 @@ public class ComponenteAD {
 
     /**
      * Método constructor que permite cargar el jdbc de la clase ComponenteAD
-     *
      * @throws componentead.ExcepcionAD se lanzará cuando se produzca algún
      * problema al cargar el jdbc
      */
@@ -46,7 +56,6 @@ public class ComponenteAD {
 
     /**
      * Método que permite conectar con la BD Ong
-     *
      * @throws componentead.ExcepcionAD Se lanzará cuando se produzca algún
      * problema al conectar con la BD Ong
      */
@@ -64,7 +73,6 @@ public class ComponenteAD {
 
     /**
      * Método que permite desconectar con la BD Ong
-     *
      * @throws componentead.ExcepcionAD Se lanzará cuando se produzca algún
      * problema al finalizar la conexión con la BD Ong
      */
@@ -82,7 +90,6 @@ public class ComponenteAD {
 
     /**
      * Este método permite insertar un registro en la tabla usuario
-     *
      * @param usuario Objecto de la clase Usuario que contiene los datos del
      * usuario a insertar
      * @return Cantidad de registros insertados
@@ -114,7 +121,7 @@ public class ComponenteAD {
                             + "la contraseña no se pueden repetir. ");
                     break;
                 case 1400:
-                    ead.setMensajeUsuario("Error: Toda la información del usuario menos el "
+                    ead.setMensajeUsuario("Error: Toda la información del usuario "
                             + "debe ser obligatoria. ");
                     break;
                 case 2290:
@@ -142,7 +149,6 @@ public class ComponenteAD {
 
     /**
      * Este método permite eliminar un registro en la tabla usuario
-     *
      * @param usuarioId de la clase Integer que contiene el identificador del
      * usuario a eliminar
      * @return Cantidad de registros eliminados
@@ -168,7 +174,7 @@ public class ComponenteAD {
 
             switch (ex.getErrorCode()) {
                 case 2292:
-                    ead.setMensajeUsuario("Error: El usuario no se puede eliminar porque tiene una permiso asociado. ");
+                    ead.setMensajeUsuario("Error: El usuario tiene un permiso asociado. ");
                     break;
                 default:
                     ead.setMensajeUsuario("Error en el sistema. Consulta con el administrador. ");
@@ -182,7 +188,6 @@ public class ComponenteAD {
 
     /**
      * Este método permite modificar un registro en la tabla usuario
-     *
      * @param usuarioIdViejo de la clase Integer que contiene el identificador
      * del usuario a modificar
      * @param usuario Objecto de la clase Usuario que contiene los datos del
@@ -218,8 +223,8 @@ public class ComponenteAD {
                             + "no se modificó porque la información no se pueden repetir. ");
                     break;
                 case 1407:
-                    ead.setMensajeUsuario("Error: No se pudo modificar porque toda la información del usuario \n"
-                            + "menos la imagen deben ser obligatoria. ");
+                    ead.setMensajeUsuario("Error: Toda la información del usuario \n"
+                            + "debe ser obligatoria. ");
                     break;
                 case 2290:
                     ead.setMensajeUsuario("Error: El nombre debe tener una longitud máxima"
@@ -239,6 +244,9 @@ public class ComponenteAD {
                 case 20001:
                     ead.setMensajeUsuario("Error: El email no puede tener mas de una arroba. ");
                     break;
+                case 2291:
+                    ead.setMensajeUsuario("Error: El usuario tiene un permiso asociado. ");
+                    break;
                 default:
                     ead.setMensajeUsuario("Error en el sistema. Consulta con el administrador. ");
                     break;
@@ -251,7 +259,6 @@ public class ComponenteAD {
 
     /**
      * Este método permite leer un registro en la tabla usuario
-     *
      * @param usuarioId de la clase Integer que contiene el identificador del
      * usuario a leer
      * @return Objeto cliente de la clase Usuario leeido
@@ -295,7 +302,6 @@ public class ComponenteAD {
 
     /**
      * Este método permite leer todos los registros en la tabla usuario
-     *
      * @return Objeto listaUsuarios de la clase ArrayList de tipo Usuario
      * leeidos
      * @throws componentead.ExcepcionAD Se lanzará cuando se produzca algún
@@ -333,10 +339,126 @@ public class ComponenteAD {
         }
         return listaUsuarios;
     }
+    
+    /**
+     * Este método permite autenticar al usuario contra la base de datos
+     * @param usuario de la clase Usuario
+     * @return usuario de la clase Usuario leeidos
+     * @throws componentead.ExcepcionAD Se lanzará cuando se produzca algún problema al operar con la BD Ong
+     */
+    public Usuario autenticacion(Usuario usuario) throws ExcepcionAD {
+        String consulta = "SELECT NOMBRE, CONTRASENA FROM USUARIOS WHERE NOMBRE = '"
+                    + usuario.getNombre() + "' AND CONTRASENA = '" + usuario.getContrasena() + "'";
+        try {
+            conectarBD();
+            Statement sentencia = conexion.createStatement();
+            ResultSet resultadoLeer = sentencia.executeQuery(consulta);
+            if (resultadoLeer != null && resultadoLeer.getRow() > 0) {
+                while (resultadoLeer.next()) {
+                    Usuario user = new Usuario();
+                    user.setUsuarioId(resultadoLeer.getInt("USUARIO_ID"));
+                    user.setNombre(resultadoLeer.getString("NOMBRE"));
+                    user.setEmail(resultadoLeer.getString("EMAIL"));
+                    user.setContrasena(resultadoLeer.getString("CONTRASENA"));
+                    user.setImagen(resultadoLeer.getString("IMAGEN"));
+                    String descifrado = descencriptar(user.getContrasena(), usuario.getContrasena());
+                    if (descifrado.equalsIgnoreCase(usuario.getContrasena())
+                            && user.getNombre().equals(usuario.getNombre())) {
+                        return user;
+                    }
+                }
+                sentencia.close();
+                desconectarBD();
+            }
+            return usuario;
+        } catch (SQLException ex) {
+            ExcepcionAD ead = new ExcepcionAD();
+            ead.setCodigoError(1);
+            ead.setMensajeAdministrador(ex.getMessage());
+            ead.setSentenciaSQL(consulta);
+            ead.setMensajeUsuario("Error general del sistema. Consulte con el administrador. ");
+            throw ead;
+        }
+    }
+    
+    /**
+     * Este método permite generar la clave de la contraseña del usuario mediante un funcion SHA_256
+     * y con el algoritmo AES
+     * @param pass de clase String
+     * @return Objeto secKey de la clase SecretKeySpec
+     * @throws componentead.ExcepcionAD Se lanzará cuando se produzca algún problema al operar con la BD Ong
+     */
+    private SecretKeySpec generarClave(String pass) throws ExcepcionAD {
+        try {
+            MessageDigest sha = MessageDigest.getInstance("SHA_256");
+            byte[] key = pass.getBytes("UTF_8");
+            key = sha.digest(key);
+            SecretKeySpec secKey = new SecretKeySpec(key, "AES");
+            return secKey;
+        } catch (NoSuchAlgorithmException | UnsupportedEncodingException ex) {
+            ExcepcionAD ead = new ExcepcionAD();
+            ead.setCodigoError(1);
+            ead.setMensajeAdministrador(ex.getMessage());
+            ead.setMensajeUsuario("Error general del sistema. Consulte con el administrador. ");
+            throw ead;
+        }
+    }
+    
+    /**
+     * Este método permite encriptar la contraseña del usuario
+     * y cifrarlo con el algoritmo AES
+     * @param pass de clase String
+     * @return String datosEncriptados de la clase String
+     * @throws componentead.ExcepcionAD Se lanzará cuando se produzca algún
+     * problema al operar con la BD Ong
+     */
+    public String encriptar(String pass) throws ExcepcionAD {
+        try {
+            SecretKeySpec secretKey = generarClave(pass);
+            Cipher cipher = Cipher.getInstance("AES");
+            cipher.init(Cipher.ENCRYPT_MODE, secretKey);
+            byte[] datosEncriptadosBytes = cipher.doFinal(pass.getBytes());
+            String datosEncriptadosString = Base64.getEncoder().encodeToString(datosEncriptadosBytes);
+            return datosEncriptadosString;
+        } catch (ExcepcionAD | InvalidKeyException | NoSuchAlgorithmException
+                | BadPaddingException | IllegalBlockSizeException | NoSuchPaddingException ex) {
+            ExcepcionAD ead = new ExcepcionAD();
+            ead.setCodigoError(1);
+            ead.setMensajeAdministrador(ex.getMessage());
+            ead.setMensajeUsuario("Error general del sistema. Consulte con el administrador. ");
+            throw ead;
+        }
+    }
+    
+    /**
+     * Este método permite descencriptar la clave de la contraseña del usuario
+     * @param datosEncriptadosString de la clase String
+     * @param pass de clase String
+     * @return datosDesencriptadosString de la clase String
+     * @throws componentead.ExcepcionAD Se lanzará cuando se produzca algún
+     * problema al operar con la BD Ong
+     */
+    public String descencriptar(String datosEncriptadosString, String pass) throws ExcepcionAD {
+        try {
+            SecretKeySpec secretKey = generarClave(pass);
+            Cipher cipher = Cipher.getInstance("AES");
+            cipher.init(Cipher.DECRYPT_MODE, secretKey);
+            byte[] datosDescoficados = Base64.getDecoder().decode(datosEncriptadosString);
+            byte[] datosDesencriptadosByte = cipher.doFinal(datosDescoficados);
+            String datosDesencriptadosString = new String(datosDesencriptadosByte);
+            return datosDesencriptadosString;
+        } catch (ExcepcionAD | InvalidKeyException | NoSuchAlgorithmException
+                | BadPaddingException | IllegalBlockSizeException | NoSuchPaddingException ex) {
+            ExcepcionAD ead = new ExcepcionAD();
+            ead.setCodigoError(1);
+            ead.setMensajeAdministrador(ex.getMessage());
+            ead.setMensajeUsuario("Error general del sistema. Consulte con el administrador. ");
+            throw ead;
+        }
+    }
 
     /**
      * Este método permite insertar un registro en la tabla rol
-     *
      * @param rol Objecto de la clase Rol que contiene los datos del rol a
      * insertar
      * @return Cantidad de registros insertados
@@ -363,8 +485,8 @@ public class ComponenteAD {
 
             switch (ex.getErrorCode()) {
                 case 1:
-                    ead.setMensajeUsuario("Error: No se pudo insertar el identificador del rol, el nombre y la descripción "
-                            + "porque no se pueden repetir. ");
+                    ead.setMensajeUsuario("Error: El identificador del rol, el nombre y la descripción "
+                            + "no se pueden repetir. ");
                     break;
                 case 1400:
                     ead.setMensajeUsuario("Error: Toda la información del rol debe ser obligatoria. ");
@@ -381,7 +503,6 @@ public class ComponenteAD {
 
     /**
      * Este método permite eliminar un registro en la tabla rol
-     *
      * @param rolId de la clase Integer que contiene el id de la venta a
      * eliminar
      * @return Cantidad de registros eliminados
@@ -408,7 +529,7 @@ public class ComponenteAD {
 
             switch (ex.getErrorCode()) {
                 case 2292:
-                    ead.setMensajeUsuario("Error: El rol no se puede eliminar porque tiene una permiso asociado. ");
+                    ead.setMensajeUsuario("Error: El rol tiene una permiso asociado. ");
                     break;
                 default:
                     ead.setMensajeUsuario("Error en el sistema. Consulta con el administrador. ");
@@ -421,7 +542,6 @@ public class ComponenteAD {
 
     /**
      * Este método permite modificar un registro en la tabla rol
-     *
      * @param rolIdViejo de la clase Integer que contiene el identificador del
      * rol a modificar
      * @param rol Objecto de la clase Rol que contiene los datos del rol a
@@ -456,8 +576,9 @@ public class ComponenteAD {
                     break;
                 case 1400:
                     ead.setMensajeUsuario("Error: Toda la información del rol debe ser obligatoria. ");
-                    break;           
-                case 2291:  ead.setMensajeUsuario("Error: El rol no se pudo modificar porque tiene permiso asociado. ");
+                    break;
+                case 2291:
+                    ead.setMensajeUsuario("Error: El rol tiene un permiso asociado. ");
                     break;
                 default:
                     ead.setMensajeUsuario("Error en el sistema. Consulta con el administrador. ");
@@ -470,7 +591,6 @@ public class ComponenteAD {
 
     /**
      * Este método permite leer un registro en la tabla rol
-     *
      * @param rolId de la clase Integer que contiene el identificador del rol a
      * leer
      * @return Objeto venta de la clase Rol leeido
@@ -511,7 +631,6 @@ public class ComponenteAD {
 
     /**
      * Este método permite leer todos los registros en la tabla rol
-     *
      * @return Objeto listaRoles de la clase ArrayList de tipo Rol leeidos
      * @throws componentead.ExcepcionAD Se lanzará cuando se produzca algún
      * problema al operar con la BD Ong
@@ -552,7 +671,6 @@ public class ComponenteAD {
 
     /**
      * Este método permite insertar un registro en la tabla Permiso
-     *
      * @param permiso Objecto de la clase Permiso que contiene los datos del
      * permiso a insertar
      * @return Cantidad de registros insertados
@@ -605,7 +723,6 @@ public class ComponenteAD {
 
     /**
      * Este método permite eliminar un registro en la tabla permiso
-     *
      * @param permisoId de la clase Integer que contiene el identificador del
      * permiso a eliminar
      * @return Cantidad de registros eliminados
@@ -627,13 +744,8 @@ public class ComponenteAD {
             ExcepcionAD ead = new ExcepcionAD();
             ead.setCodigoError(1);
             ead.setMensajeAdministrador(ex.getMessage());
+            ead.setMensajeUsuario("Error en el sistema. Consulta con el administrador. ");
             ead.setSentenciaSQL(delete);
-
-            switch (ex.getErrorCode()) {
-                default:
-                    ead.setMensajeUsuario("Error en el sistema. Consulta con el administrador");
-                    break;
-            }
             throw ead;
         }
 
@@ -642,7 +754,6 @@ public class ComponenteAD {
 
     /**
      * Este método permite modificar un registro en la tabla permiso
-     *
      * @param permisoIdViejo de la clase Integer que contiene el identificador
      * del permiso a modificar
      * @param permiso Objecto de la clase Permiso que contiene los datos del
@@ -702,7 +813,6 @@ public class ComponenteAD {
 
     /**
      * Este método permite leer un registro en la tabla permiso
-     *
      * @param permisoId de la clase Integer que contiene el identificador del
      * permiso a leer
      * @return Objeto permiso de la clase Permiso leeido
@@ -738,7 +848,7 @@ public class ComponenteAD {
             ead.setCodigoError(1);
             ead.setMensajeAdministrador(ex.getMessage());
             ead.setSentenciaSQL(leerPermiso);
-            ead.setMensajeUsuario("Error general del sistema. Consulte con el administrador");
+            ead.setMensajeUsuario("Error general del sistema. Consulte con el administrador. ");
             throw ead;
         }
 
@@ -747,7 +857,6 @@ public class ComponenteAD {
 
     /**
      * Este método permite leer todos los registros en la tabla permiso
-     *
      * @return Objeto listaPermisos de la clase ArrayList de tipo Permiso
      * leeidos
      * @throws componentead.ExcepcionAD Se lanzará cuando se produzca algún
@@ -783,19 +892,21 @@ public class ComponenteAD {
             ead.setCodigoError(ex.getErrorCode());
             ead.setMensajeAdministrador(ex.getMessage());
             ead.setSentenciaSQL(leerPermisos);
-            ead.setMensajeUsuario("Error general del sistema. Consulte con el administrador");
+            ead.setMensajeUsuario("Error general del sistema. Consulte con el administrador. ");
             throw ead;
         }
         return listaPermisos;
     }
-    
+
     /**
-     * Este método permite comprobar la autenticacion del usuario mediante roles
-     * @return true si es usuario esta registrado sino false
+     * Este método permite validar el control de acceso del usuario autenticado mediante roles
+     * @param username de la clase String
+     * @param rol de las clase String
+     * @return verdadero si es usuario es valido sino falso
      * @throws componentead.ExcepcionAD Se lanzará cuando se produzca algún
      * problema al operar con la BD Ong
      */
-    public boolean autenticacion(String username, String rol) throws ExcepcionAD {
+    public boolean validarAcceso(String username, String rol) throws ExcepcionAD {
         String query = "select * from permisos where usuario_id = '" + username + "' and rol_id = '" + rol + "'";
         try {
             conectarBD();
@@ -811,7 +922,7 @@ public class ComponenteAD {
                     permiso.setUsuario(usuario);
                     roles.setNombre(resultadoLeer.getString("ROL"));
                     permiso.setRol(roles);
-                    
+
                     if (permiso.getUsuario().equals(username) && permiso.getRol().equals(rol)) {
                         return true;
                     } else {
@@ -826,7 +937,7 @@ public class ComponenteAD {
             ead.setCodigoError(1);
             ead.setMensajeAdministrador(ex.getMessage());
             ead.setSentenciaSQL(query);
-            ead.setMensajeUsuario("Error general del sistema. Consulte con el administrador");
+            ead.setMensajeUsuario("Error general del sistema. Consulte con el administrador. ");
             throw ead;
         }
 
@@ -835,7 +946,6 @@ public class ComponenteAD {
 
     /**
      * Este método permite insertar un registro en la tabla producto
-     *
      * @param producto Objecto de la clase Producto que contiene los datos del
      * producto a insertar
      * @return Cantidad de registros insertados
@@ -867,14 +977,14 @@ public class ComponenteAD {
 
             switch (ex.getErrorCode()) {
                 case 1:
-                    ead.setMensajeUsuario("Error: No se pudo insertar el identificador del producto, el nombre, la imagen y el codigo QR "
+                    ead.setMensajeUsuario("Error: El identificador del producto, el nombre, la imagen y el codigo QR "
                             + "porque no se pueden repetir. ");
                     break;
                 case 1400:
-                    ead.setMensajeUsuario("Error: No se pudo insertar porque toda la información del producto debe ser obligatoria. ");
+                    ead.setMensajeUsuario("Error: Toda la información del producto debe ser obligatoria. ");
                     break;
                 case 2290:
-                    ead.setMensajeUsuario("Error: No se pudo insertar el producto porque el tipo de envase no existe. ");
+                    ead.setMensajeUsuario("Error: El tipo de envase del producto no existe. ");
                     break;
                 default:
                     ead.setMensajeUsuario("Error en el sistema. Consulta con el administrador. ");
@@ -888,7 +998,6 @@ public class ComponenteAD {
 
     /**
      * Este método permite eliminar un registro en la tabla producto
-     *
      * @param productoId de la clase Integer que contiene el identificador del
      * producto a eliminar
      * @return Cantidad de registros eliminados
@@ -911,12 +1020,7 @@ public class ComponenteAD {
             ead.setCodigoError(1);
             ead.setMensajeAdministrador(ex.getMessage());
             ead.setSentenciaSQL(llamada);
-
-            switch (ex.getErrorCode()) {
-                default:
-                    ead.setMensajeUsuario("Error en el sistema. Consulta con el administrador. ");
-                    break;
-            }
+            ead.setMensajeUsuario("Error en el sistema. Consulta con el administrador. ");
             throw ead;
         }
         return registrosAfectados;
@@ -924,7 +1028,6 @@ public class ComponenteAD {
 
     /**
      * Este método permite modificar un registro en la tabla producto
-     *
      * @param productoIdViejo de la clase Integer que contiene el identificador
      * del rol a modificar
      * @param producto Objecto de la clase Producto que contiene los datos del
@@ -959,18 +1062,16 @@ public class ComponenteAD {
 
             switch (ex.getErrorCode()) {
                 case 1:
-                    ead.setMensajeUsuario("Error: No se pudo modificar el identificador, el nombre "
+                    ead.setMensajeUsuario("Error: El identificador, el nombre "
                             + ", la imagen y el codigo QR del producto no se pueden repetir. ");
                     break;
                 case 1400:
-                    ead.setMensajeUsuario("Error: Toda la información del producto debe ser obligatoria.");
+                    ead.setMensajeUsuario("Error: Toda la información del producto debe ser obligatoria. ");
                     break;
                 case 2290:
-                    ead.setMensajeUsuario("Error: No se pudo modificar el producto porque el tipo de envase no existe. ");
+                    ead.setMensajeUsuario("Error: El tipo de envase del producto no existe. ");
                     break;
-                case 2291:
-                    ead.setMensajeUsuario("Error: El producto no se pudo modificar porque tiene un colaborador aasociado. ");
-                    break;
+
                 default:
                     ead.setMensajeUsuario("Error en el sistema. Consulta con el administrador. ");
                     break;
@@ -982,7 +1083,6 @@ public class ComponenteAD {
 
     /**
      * Este método permite leer un registro en la tabla producto
-     *
      * @param productoId de la clase Integer que contiene el identificador del
      * producto a leer
      * @return Objeto producto de la clase Producto leeido
@@ -1029,7 +1129,7 @@ public class ComponenteAD {
             ead.setCodigoError(1);
             ead.setMensajeAdministrador(ex.getMessage());
             ead.setSentenciaSQL(leerProducto);
-            ead.setMensajeUsuario("Error general del sistema. Consulte con el administrador");
+            ead.setMensajeUsuario("Error general del sistema. Consulte con el administrador. ");
             throw ead;
         }
         return producto;
@@ -1037,7 +1137,6 @@ public class ComponenteAD {
 
     /**
      * Este método permite leer todos los registros en la tabla producto
-     *
      * @return Objeto listaProductos de la clase ArrayList de tipo Producto
      * leeidos
      * @throws componentead.ExcepcionAD Se lanzará cuando se produzca algún
@@ -1086,7 +1185,7 @@ public class ComponenteAD {
             ead.setCodigoError(ex.getErrorCode());
             ead.setMensajeAdministrador(ex.getMessage());
             ead.setSentenciaSQL(leerProductos);
-            ead.setMensajeUsuario("Error general del sistema. Consulte con el administrador");
+            ead.setMensajeUsuario("Error general del sistema. Consulte con el administrador. ");
             throw ead;
         }
         return listaProductos;
@@ -1094,7 +1193,6 @@ public class ComponenteAD {
 
     /**
      * Este método permite insertar un registro en la tabla colaborador
-     *
      * @param colaborador Objecto de la clase Colaborador que contiene los datos
      * del colaborador a insertar
      * @return Cantidad de registros insertados
@@ -1144,10 +1242,10 @@ public class ComponenteAD {
                     ead.setMensajeUsuario("Error: El nombre, el email, teléfono del colaborador tiene caracteres incorrectos. ");
                     break;
                 case 20001:
-                    ead.setMensajeUsuario("Error: El email del colaborador no puede contener más de una @rroba. ");
+                    ead.setMensajeUsuario("Error: El email del colaborador no puede contener más de una arroba. ");
                     break;
                 default:
-                    ead.setMensajeUsuario("Error en el sistema. Consulta con el administrador");
+                    ead.setMensajeUsuario("Error en el sistema. Consulta con el administrador. ");
                     break;
             }
             throw ead;
@@ -1158,7 +1256,6 @@ public class ComponenteAD {
 
     /**
      * Este método permite eliminar un registro en la tabla colaborador
-     *
      * @param colaboradorId de la clase Integer que contiene el identificador
      * del colaborador a eliminar
      * @return Cantidad de registros eliminados
@@ -1184,10 +1281,10 @@ public class ComponenteAD {
 
             switch (ex.getErrorCode()) {
                 case 2292:
-                    ead.setMensajeUsuario("Error: El colaborador no se puede eliminar porque tiene un producto asociado. ");
+                    ead.setMensajeUsuario("Error: El colaborador tiene un producto asociado. ");
                     break;
                 default:
-                    ead.setMensajeUsuario("Error en el sistema. Consulta con el administrador");
+                    ead.setMensajeUsuario("Error en el sistema. Consulta con el administrador. ");
                     break;
             }
             throw ead;
@@ -1198,7 +1295,6 @@ public class ComponenteAD {
 
     /**
      * Este método permite modificar un registro en la tabla colaborador
-     *
      * @param colaboradorIdViejo de la clase Integer que contiene el
      * identificador del colaborador a modificar
      * @param colaborador Objecto de la clase Colaborador que contiene los datos
@@ -1254,10 +1350,13 @@ public class ComponenteAD {
                             + "tienen o empiezan con caracteres incorrectos. ");
                     break;
                 case 20001:
-                    ead.setMensajeUsuario("Error: El email del colaborador contiene más de una @rroba. ");
+                    ead.setMensajeUsuario("Error: El email del colaborador contiene más de una arroba. ");
+                    break;
+                case 2291:
+                    ead.setMensajeUsuario("Error: El colaborador tiene un producto asociado. ");
                     break;
                 default:
-                    ead.setMensajeUsuario("Error en el sistema. Consulta con el administrador");
+                    ead.setMensajeUsuario("Error en el sistema. Consulta con el administrador. ");
                     break;
             }
             throw ead;
@@ -1268,7 +1367,6 @@ public class ComponenteAD {
 
     /**
      * Este método permite leer un registro en la tabla colaborador
-     *
      * @param colaboradorId de la clase Integer que contiene el identificador
      * del colaborador a leer
      * @return Objeto colaborador de la clase Colaborador leeido
@@ -1303,7 +1401,7 @@ public class ComponenteAD {
             ead.setCodigoError(1);
             ead.setMensajeAdministrador(ex.getMessage());
             ead.setSentenciaSQL(leerColaborador);
-            ead.setMensajeUsuario("Error general del sistema. Consulte con el administrador");
+            ead.setMensajeUsuario("Error general del sistema. Consulte con el administrador. ");
             throw ead;
         }
 
@@ -1312,7 +1410,6 @@ public class ComponenteAD {
 
     /**
      * Este método permite leer todos los registros en la tabla colaborador
-     *
      * @return Objeto listaColaboradores de la clase ArrayList de tipo
      * Colaborador leeidos
      * @throws componentead.ExcepcionAD Se lanzará cuando se produzca algún
@@ -1345,7 +1442,7 @@ public class ComponenteAD {
             ead.setCodigoError(ex.getErrorCode());
             ead.setMensajeAdministrador(ex.getMessage());
             ead.setSentenciaSQL(leerColaboradores);
-            ead.setMensajeUsuario("Error general del sistema. Consulte con el administrador");
+            ead.setMensajeUsuario("Error general del sistema. Consulte con el administrador. ");
             throw ead;
         }
         return listaColaboradores;
@@ -1353,7 +1450,6 @@ public class ComponenteAD {
 
     /**
      * Este método permite insertar un registro en la tabla categoria
-     *
      * @param categoria Objecto de la clase Categoria que contiene los datos del
      * categoria a insertar
      * @return Cantidad de registros insertados
@@ -1380,8 +1476,8 @@ public class ComponenteAD {
 
             switch (ex.getErrorCode()) {
                 case 1:
-                    ead.setMensajeUsuario("Error: No se pudo insertar el identificador, el nombre, la descripcion de la categoría "
-                            + "porque la información no se puede repetir. ");
+                    ead.setMensajeUsuario("Error: El identificador, el nombre, la descripcion de la categoría "
+                            + "no se puede repetir. ");
                     break;
                 case 1400:
                     ead.setMensajeUsuario("Error: Toda la información de la categoría debe ser obligatoria. ");
@@ -1398,7 +1494,6 @@ public class ComponenteAD {
 
     /**
      * Este método permite eliminar un registro en la tabla categoria
-     *
      * @param categoriaId de la clase Integer que contiene el identificador del
      * producto a eliminar
      * @return Cantidad de registros eliminados
@@ -1423,7 +1518,8 @@ public class ComponenteAD {
             ead.setSentenciaSQL(llamada);
 
             switch (ex.getErrorCode()) {
-                case 2291:  ead.setMensajeUsuario("Error: La categoria no se pudo eliminar porque tiene un producto asociado. ");
+                case 2291:
+                    ead.setMensajeUsuario("Error: La categoria tiene un producto asociado. ");
                     break;
                 default:
                     ead.setMensajeUsuario("Error en el sistema. Consulta con el administrador. ");
@@ -1436,7 +1532,6 @@ public class ComponenteAD {
 
     /**
      * Este método permite modificar un registro en la tabla categoria
-     *
      * @param categoriaIdViejo de la clase Integer que contiene el identificador
      * de la categoria a modificar
      * @param categoria Objecto de la clase Categoria que contiene los datos de
@@ -1466,13 +1561,14 @@ public class ComponenteAD {
 
             switch (ex.getErrorCode()) {
                 case 1:
-                    ead.setMensajeUsuario("Error: No se pudo modificar el identificador, el nombre "
-                            + " y la descripcion de la categoria porque la información no se pueden repetir. ");
+                    ead.setMensajeUsuario("Error: El identificador, el nombre "
+                            + " y la descripcion de la categoria no se pueden repetir. ");
                     break;
                 case 1400:
                     ead.setMensajeUsuario("Error: Toda la información de la categoria debe ser obligatoria. ");
-                    break;        
-                case 2291:  ead.setMensajeUsuario("Error: La categoria no se pudo modificar porque tiene un producto asociado. ");
+                    break;
+                case 2291:
+                    ead.setMensajeUsuario("Error: La categoria tiene un producto asociado. ");
                     break;
                 default:
                     ead.setMensajeUsuario("Error en el sistema. Consulta con el administrador. ");
@@ -1485,7 +1581,6 @@ public class ComponenteAD {
 
     /**
      * Este método permite leer un registro en la tabla categoria
-     *
      * @param categoriaId de la clase Integer que contiene el identificador del
      * categoria a leer
      * @return Objeto categoria de la clase Categoria leeido
@@ -1526,7 +1621,6 @@ public class ComponenteAD {
 
     /**
      * Este método permite leer todos los registros en la tabla categoria
-     *
      * @return Objeto listaCategorias de la clase ArrayList de tipo Categoria
      * leeidos
      * @throws componentead.ExcepcionAD Se lanzará cuando se produzca algún
