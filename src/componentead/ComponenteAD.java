@@ -220,7 +220,7 @@ public class ComponenteAD {
             switch (ex.getErrorCode()) {
                 case 1:
                     ead.setMensajeUsuario("Error: El identificador del usuario, el nombre, el email, y la contraseña "
-                            + "no se modificó porque la información no se pueden repetir. ");
+                            + "no se pueden repetir. ");
                     break;
                 case 1407:
                     ead.setMensajeUsuario("Error: Toda la información del usuario \n"
@@ -572,7 +572,7 @@ public class ComponenteAD {
             switch (ex.getErrorCode()) {
                 case 1:
                     ead.setMensajeUsuario("Error: El identificador del rol, el nombre "
-                            + "y la descripción del rol porque la información no se pueden repetir. ");
+                            + "y la descripción del rol no se pueden repetir. ");
                     break;
                 case 1400:
                     ead.setMensajeUsuario("Error: Toda la información del rol debe ser obligatoria. ");
@@ -784,7 +784,7 @@ public class ComponenteAD {
             switch (ex.getErrorCode()) {
                 case 1:
                     ead.setMensajeUsuario("Error: El identificador del permiso, el nombre del usuario y el nombre del rol "
-                            + "no se modificó porque no se pueden repetir. ");
+                            + "no se pueden repetir. ");
                     break;
                 case 1407:
                     ead.setMensajeUsuario("Error: Toda la información del permiso "
