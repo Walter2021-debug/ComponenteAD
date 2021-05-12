@@ -899,14 +899,14 @@ public class ComponenteAD {
     }
 
     /**
-     * Este método permite validar el control de acceso del usuario autenticado mediante roles
+     * Este método permite controlar el acceso del usuario autenticado mediante roles
      * @param username de la clase String
      * @param rol de las clase String
      * @return verdadero si es usuario es valido sino falso
      * @throws componentead.ExcepcionAD Se lanzará cuando se produzca algún
      * problema al operar con la BD Ong
      */
-    public boolean validarAcceso(String username, String rol) throws ExcepcionAD {
+    public boolean controlAcceso(String username, String rol) throws ExcepcionAD {
         String query = "select * from permisos where usuario_id = '" + username + "' and rol_id = '" + rol + "'";
         try {
             conectarBD();
